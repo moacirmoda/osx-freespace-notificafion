@@ -3,6 +3,8 @@ import os
 import pickle
 from datetime import datetime
 
+TERMINAL_NOTIFIER_PATH = '/usr/local/bin/terminal-notifier'
+
 
 class FreeSpaceNotification:
     def __init__(self, mounted_on='/'):
@@ -27,7 +29,7 @@ class FreeSpaceNotification:
         t = '-title {!r}'.format(title)
         s = '-subtitle {!r}'.format(subtitle)
         m = '-message {!r}'.format(message)
-        os.system('terminal-notifier {}'.format(' '.join([m, t, s])))
+        os.system('{} {}'.format(TERMINAL_NOTIFIER_PATH, ' '.join([m, t, s])))
     
     def get_info(self):
         if not os.path.exists(self.filename):
@@ -57,11 +59,12 @@ class FreeSpaceNotification:
     
     def run(self):
         free_space = self.get_free_space()
-        self.save_info(free_space)
         self.notify(
             '{} de espaço livre em disco'.format(free_space),
             self.get_last_execution()
         )
+
+        self.save_info(free_space)
 
 if __name__ == '__main__':
     app = FreeSpaceNotification()
